@@ -11,25 +11,35 @@ const quote = '"It always seems impossible until it\'s done" - Nelson Mandela';
 
 const server = dgram.createSocket('udp4'); // acts as client and server
 
-server.on('message', (msg, rinfo) => {
+var server_counts = new Map();
+
+server.on('message', (msg) => { // TODO rinfo (second arg) passes that data, should I exclude it?
 
 	var cs = adler.sum(msg.slice(4));
 
 	if (cs == msg.readUInt32BE(0)) {	
 
-		console.log('Received %s', msg.slice(18));
+		console.log('%s', msg.slice(18)); //quote
 
 		var time_sent = new Uint64BE(msg, 4); // read time stamp
 		var time_diff = Date.now() - time_sent.toNumber();
 		console.log('Time to send: %d', time_diff);
 
-		var address = ipaddr.fromByteArray(msg.slice(12, 16));
+		var address = ipaddr.fromByteArray(msg.slice(12, 16)); // load address 
 		console.log('Source address: %s', address.toString());
+
+		var port = msg.readUInt16BE(16); // load port
+		console.log('Sent on port: %s', port.toString());
+
+		var count = server_counts.get(address.toString()) || 0; // get current message count
+		server_counts.set(address.toString(), count + 1); // update count
 		
-		var port = msg.readUInt16BE(16);
-		console.log('Sent port: %s', port.toString());
+
+		console.log('Received %d message(s) from this address\n', count + 1);
+
 	} else {
-		console.log('Error: message corrupted');
+		var err = new Error('Checksums do not match, message corrupted');
+		throw err;
 	}
 
 });
@@ -51,11 +61,10 @@ function send() { // create message and send it on the server
 	var buf_ts = stamp.toBuffer();
 	
 	var address = ipaddr.parse(server.address().address); // parse string into byte representation
-	var buf_ip = Buffer.from(address.octets); // ip address buffer
+	var buf_ip = Buffer.from(address.octets); // ip address buffer (4 bytes)
 
-	var buf_p = Buffer.alloc(2); // port (
+	var buf_p = Buffer.alloc(2); // port (2 bytes)
 	buf_p.writeUInt16BE(server.address().port, 0);
-	console.log("port: %d", server.address().port);
 
 	var buf_q = Buffer.from(quote); //quote
 	var buffer = Buffer.concat([buf_ts, buf_ip, buf_p, buf_q], 14 + quote.length);
@@ -66,8 +75,8 @@ function send() { // create message and send it on the server
 	buf_cs.writeUInt32BE(sum, 0);
 	buffer = Buffer.concat([buf_cs, buffer], buf_cs.length + buffer.length);
 
-	//TODO: specify sending and listening port
-	server.send(buffer, 40001, (err) => {
+	//TODO: specify sending and listening port, and destination address
+	server.send(buffer, 40001, 'localhost', (err) => {
 		//TODO: handle errors
 	});
 	
