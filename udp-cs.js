@@ -38,7 +38,7 @@ if (!port) {
 var server_counts = new Map();
 
 
-server.on('message', (msg) => { // TODO rinfo (second arg) passes that data, should I exclude it?
+server.on('message', (msg) => { // NOTE: rinfo (second arg) passes the data I print, but I excluded it to build my own data buffer
 
 	/***
 	 parse the message from a client
@@ -65,7 +65,6 @@ server.on('message', (msg) => { // TODO rinfo (second arg) passes that data, sho
 		var count = server_counts.get(address.toString()) || 0; // get current message count
 		server_counts.set(address.toString(), count + 1); // update count
 		
-
 		console.log('Received %d message(s) from this address\n', count + 1);
 
 	} else {
