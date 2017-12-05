@@ -6,9 +6,7 @@
   "dependencies": {
     "adler32": "^0.1.7",
     "bignum": "^0.12.5",
-    "eslint": "^4.12.1",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.5.1",
     "int64-buffer": "^0.1.9",
@@ -18,7 +16,11 @@
     "minimist": "^1.2.0",
     "ttab": "^0.6.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^4.12.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
   "scripts": {
     "test": "node index.js -p 40001",
     "start": "node index.js -p 40002 -s localhost:40001"
