@@ -1,6 +1,6 @@
 // John Nolan
 // receive.js
-// a function to receive a message in the specific format for FG
+// A module to receive a message in the specific format for FG
 
 // npm modules
 const Uint64BE = require('int64-buffer').Uint64BE; // library to load 64 bytes to a buffer

@@ -1,6 +1,6 @@
 // John Nolan
 // send.js
-// Send a message following specific protocol for FG
+// A module to send a message following the specific protocol for FG
 
 // npm modules
 const Uint64BE = require('int64-buffer').Uint64BE; // library to load 64 bytes to a buffer
