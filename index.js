@@ -40,7 +40,6 @@ if (!port) {
 // server callbacks
 server.on('message', (msg) => { // NOTE: rinfo (second arg) passes the data I print, but I excluded it to build my own data buffer
 	parse(msg); // print statement for this message format
-	//console.log(statement)
 });
 
 
