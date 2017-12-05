@@ -27,7 +27,7 @@ module.exports = {
 
       const time_sent = new Uint64BE(msg, 4); // read time stamp
       const time_diff = Date.now() - time_sent.toNumber();
-      console.log('Transfer time: %d', time_diff);
+      console.log('Transfer time: %d ms', time_diff);
 
       const address = ipaddr.fromByteArray(msg.slice(12, 16)); // load address
       console.log('Source address: %s', address.toString());
